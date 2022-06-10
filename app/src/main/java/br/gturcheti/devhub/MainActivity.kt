@@ -3,7 +3,6 @@ package br.gturcheti.devhub
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -17,7 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -26,6 +25,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.gturcheti.devhub.ui.theme.DevHubTheme
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 
 lateinit var user: User
 lateinit var fontFamily: FontFamily
@@ -34,12 +35,13 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        user = User(
+        var user = User(
             name = "Gabriel Turcheti",
             userName = "gturcheti",
             bio = "Android Developer",
-            profilePicture = R.drawable.profile_devhub
+            profilePicture = "https://avatars.githubusercontent.com/u/94029140?v=4",
         )
+
 
         fontFamily = FontFamily(
             Font(R.font.prompt_thin, FontWeight.Thin),
@@ -89,10 +91,15 @@ fun DevHubProfile(user: User) {
             Arrangement.Center,
             Alignment.CenterHorizontally
         ) {
-            Image(
-                painterResource(user.profilePicture),
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data("https://avatars.githubusercontent.com/u/94029140?v=4")
+                    .error(R.drawable.ic_baseline_error_outline_24)
+                    .crossfade(true)
+                    .build(),
                 "profile_picture",
                 modifier = Modifier
+                    .background(Color.White, CircleShape)
                     .size(200.dp)
                     .border(2.dp, Color.DarkGray, CircleShape)
                     .clip(CircleShape),
